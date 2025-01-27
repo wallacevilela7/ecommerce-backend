@@ -15,7 +15,7 @@ public class UserEntity {
     private String fullName;
 
     //BillingAddress mapeamento unidirecional
-    @OneToOne()
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "billing_address_id")
     private BillingAddressEntity billingAddressEntity;
 

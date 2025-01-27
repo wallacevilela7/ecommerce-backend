@@ -28,8 +28,6 @@ public class UserService {
         billingAddress.setNumber(data.number());
         billingAddress.setComplement(data.complement());
 
-        billingAddressRepository.save(billingAddress);
-
         var user = new UserEntity();
         user.setFullName(data.fullName());
         user.setBillingAddress(billingAddress);
@@ -45,7 +43,6 @@ public class UserService {
 
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            billingAddressRepository.deleteById(user.get().getBillingAddress().getBilligAddressId());
         }
 
         return user.isPresent();
