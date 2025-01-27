@@ -7,6 +7,9 @@ import wvs.ecommerceapi.entity.UserEntity;
 import wvs.ecommerceapi.repository.BillingAddressRepository;
 import wvs.ecommerceapi.repository.UserRepository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class UserService {
 
@@ -31,5 +34,20 @@ public class UserService {
         user.setFullName(data.fullName());
         user.setBillingAddress(billingAddress);
         return userRepository.save(user);
+    }
+
+    public Optional<UserEntity> findUserById(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+    public boolean deleteUserById(UUID userId) {
+        var user = userRepository.findById(userId);
+
+        if (user.isPresent()) {
+            userRepository.deleteById(userId);
+            billingAddressRepository.deleteById(user.get().getBillingAddress().getBilligAddressId());
+        }
+
+        return user.isPresent();
     }
 }
