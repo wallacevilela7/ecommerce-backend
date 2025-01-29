@@ -2,10 +2,8 @@ package wvs.ecommerceapi.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import wvs.ecommerceapi.controller.dto.ApiResponse;
-import wvs.ecommerceapi.controller.dto.CreateOrderDto;
-import wvs.ecommerceapi.controller.dto.OrderSummaryDto;
-import wvs.ecommerceapi.controller.dto.PaginationResponse;
+import wvs.ecommerceapi.controller.dto.*;
+import wvs.ecommerceapi.entity.OrderEntity;
 import wvs.ecommerceapi.service.OrderService;
 
 import java.net.URI;
@@ -41,6 +39,14 @@ public class OrderController {
                         )
                 )
         );
+    }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> findById(@PathVariable("orderId") Long orderId) {
+        var order = orderService.findById(orderId);
+
+        return order.isPresent() ?
+                ResponseEntity.ok(OrderResponseDto.fromEntity(order.get())) :
+                ResponseEntity.notFound().build();
     }
 }
