@@ -1,8 +1,11 @@
 package wvs.ecommerceapi.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import wvs.ecommerceapi.controller.dto.CreateOrderDto;
 import wvs.ecommerceapi.controller.dto.OrderItemDto;
+import wvs.ecommerceapi.controller.dto.OrderSummaryDto;
 import wvs.ecommerceapi.entity.*;
 import wvs.ecommerceapi.excepiton.CreateOrderException;
 import wvs.ecommerceapi.repository.OrderItemRepository;
@@ -91,5 +94,17 @@ public class OrderService {
     private UserEntity validateUser(CreateOrderDto data) {
         return userRepository.findById(data.userId())
                 .orElseThrow(() -> new CreateOrderException("User not found"));
+    }
+
+    public Page<OrderSummaryDto> listOrders(Integer page, Integer pageSize) {
+        return orderRepository.findAll(PageRequest.of(page, pageSize))
+                .map(entity -> {
+                    return new OrderSummaryDto(
+                            entity.getOrderId(),
+                            entity.getOrderDate(),
+                            entity.getUser().getUserId(),
+                            entity.getTotal()
+                    );
+                });
     }
 }
